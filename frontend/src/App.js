@@ -5,7 +5,7 @@ import { Truck, Plus, X, Loader2, Trash2, CheckCircle, BarChart3, Map as MapIcon
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
-const API_URL = 'https://logistic-f86s.onrender.com';
+const API_URL = 'https://logistic-f86s.onrender.com/api';
 
 // Фикс иконок Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
