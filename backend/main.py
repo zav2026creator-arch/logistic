@@ -48,14 +48,10 @@ def init_db():
         CREATE TABLE IF NOT EXISTS orders (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             cargo TEXT,
-            weight REAL,
-            volume REAL,
-            distance REAL,
             location_from TEXT,
             location_to TEXT,
             lat REAL, lng REAL,
             lat2 REAL, lng2 REAL,
-            description TEXT,
             status TEXT,
             client_username TEXT,
             carrier_username TEXT,
@@ -116,16 +112,14 @@ async def get_orders(username: str, role: str):
     conn.close()
     return [dict(r) for r in rows]
 
-# --- cargo, weight, volume, distance, location_from, location_to, lat, lng, lat2, lng2, 
-# --- description, status, client_username, carrier_username, price.
-@app.post("/api/orders") 
+@app.post("/api/orders")
 async def create_order(order: dict):
     conn = sqlite3.connect('logistics.db')
     cursor = conn.cursor()
     cursor.execute('''
-        INSERT INTO orders (cargo, weight, volume, distance, location_from, location_to, lat, lng, lat2, lng2, status, client_username)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ''', (order['cargo'], order['weight'], order['volume'], order['distance'], order['from'], order['to'], order['lat'], order['lng'], 
+        INSERT INTO orders (cargo, location_from, location_to, lat, lng, lat2, lng2, status, client_username)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (order['cargo'], order['from'], order['to'], order['lat'], order['lng'], 
           order['lat2'], order['lng2'], 'Pending', order['username']))
     conn.commit()
     conn.close()
@@ -145,16 +139,10 @@ async def update_status(order_id: int, data: dict):
 async def delete_order(order_id: int):
     conn = sqlite3.connect('logistics.db')
     cursor = conn.cursor()
-    try:
-        cursor.execute("DELETE FROM orders WHERE id = ?", (order_id,))
-        conn.commit()
-        if cursor.rowcount == 0:
-            raise HTTPException(status_code=404, detail="Заказ не найден")
-        return {"status": "deleted"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    finally:
-        conn.close()
+    cursor.execute("DELETE FROM orders WHERE id = ?", (order_id,))
+    conn.commit()
+    conn.close()
+    return {"status": "deleted"}
 
 # --- АДМИН-ПАНЕЛЬ ---
 @app.get("/api/admin/users")
