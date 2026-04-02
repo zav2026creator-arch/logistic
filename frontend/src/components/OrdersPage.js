@@ -32,7 +32,7 @@ const OrdersPage = ({ user, orders, onRefresh, setSelected, API_URL }) => {
 
   const handleDelete = async (e, id) => {
     e.stopPropagation(); // Останавливаем всплытие, чтобы не открылась модалка деталей
-    if (window.confirm("Вы уверены, что хотите удалить этот заказ?")) {
+    if (window.confirm("Are you sure you want to delete this order?")) {
       await fetch(`${API_URL}/orders/${id}`, {
         method: 'DELETE',
       });
@@ -43,10 +43,10 @@ const OrdersPage = ({ user, orders, onRefresh, setSelected, API_URL }) => {
   return (
     <div className="p-10 max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-10">
-        <h2 className="text-3xl font-black italic uppercase tracking-tighter">Список перевозок</h2>
+        <h2 className="text-3xl font-black italic uppercase tracking-tighter">List of transportations</h2>
         {user.role === 'client' && (
           <button onClick={() => setShowForm(true)} className="bg-blue-600 text-white px-10 py-4 rounded-3xl font-black uppercase text-[10px] tracking-widest shadow-xl flex items-center gap-2 hover:scale-105 transition-all">
-            <Plus size={16}/> Новый заказ
+            <Plus size={16}/> New order
           </button>
         )}
       </div>
@@ -55,10 +55,10 @@ const OrdersPage = ({ user, orders, onRefresh, setSelected, API_URL }) => {
         <table className="w-full text-left">
           <thead className="bg-slate-50 border-b text-[10px] font-black text-slate-400 uppercase">
             <tr>
-              <th className="p-8">Груз</th>
-              <th className="p-8">Маршрут</th>
-              <th className="p-8">Статус</th>
-              <th className="p-8 text-right">Действия</th>
+              <th className="p-8">Cargo</th>
+              <th className="p-8">Route</th>
+              <th className="p-8">Status</th>
+              <th className="p-8 text-right">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y">
@@ -73,7 +73,7 @@ const OrdersPage = ({ user, orders, onRefresh, setSelected, API_URL }) => {
                     <button 
                       onClick={(e) => handleDelete(e, o.id)}
                       className="p-3 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-2xl transition-all"
-                      title="Удалить заказ"
+                      title="Delete order"
                     >
                       <Trash2 size={18} />
                     </button>
@@ -88,19 +88,19 @@ const OrdersPage = ({ user, orders, onRefresh, setSelected, API_URL }) => {
       {showForm && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-[5000] p-4">
           <div className="bg-white p-12 rounded-[50px] w-full max-w-md shadow-2xl relative">
-            <h3 className="text-3xl font-black italic uppercase mb-8">Создать заказ</h3>
+            <h3 className="text-3xl font-black italic uppercase mb-8">Create an order</h3>
             <form onSubmit={handleAdd} className="space-y-4">
-              <input required className="w-full p-5 bg-slate-50 rounded-2xl outline-none border-none font-bold" placeholder="Что везем?" onChange={e => setForm({...form, cargo: e.target.value})} />
-              <input required className="w-full p-5 bg-slate-50 rounded-2xl outline-none border-none font-bold" placeholder="Вес (KG)" onChange={e => setForm({...form, weight: e.target.value})} />
-              <input required className="w-full p-5 bg-slate-50 rounded-2xl outline-none border-none font-bold" placeholder="Обем (M3)" onChange={e => setForm({...form, volume: e.target.value})} />
-              <input required className="w-full p-5 bg-slate-50 rounded-2xl outline-none border-none font-bold" placeholder="Дистанция (Км)" onChange={e => setForm({...form, distance: e.target.value})} />
-              <input required className="w-full p-5 bg-slate-50 rounded-2xl outline-none border-none font-bold" placeholder="Откуда (Город)" onChange={e => setForm({...form, from: e.target.value})} />
-              <input required className="w-full p-5 bg-slate-50 rounded-2xl outline-none border-none font-bold" placeholder="Куда (Город)" onChange={e => setForm({...form, to: e.target.value})} />
+              <input required className="w-full p-5 bg-slate-50 rounded-2xl outline-none border-none font-bold" placeholder="What are we carrying?" onChange={e => setForm({...form, cargo: e.target.value})} />
+              <input required className="w-full p-5 bg-slate-50 rounded-2xl outline-none border-none font-bold" placeholder="Weight (KG)" onChange={e => setForm({...form, weight: e.target.value})} />
+              <input required className="w-full p-5 bg-slate-50 rounded-2xl outline-none border-none font-bold" placeholder="Volume (M3)" onChange={e => setForm({...form, volume: e.target.value})} />
+              <input required className="w-full p-5 bg-slate-50 rounded-2xl outline-none border-none font-bold" placeholder="Distance (Km)" onChange={e => setForm({...form, distance: e.target.value})} />
+              <input required className="w-full p-5 bg-slate-50 rounded-2xl outline-none border-none font-bold" placeholder="From (City)" onChange={e => setForm({...form, from: e.target.value})} />
+              <input required className="w-full p-5 bg-slate-50 rounded-2xl outline-none border-none font-bold" placeholder="Where (City)" onChange={e => setForm({...form, to: e.target.value})} />
               <button disabled={isGeo} className="w-full bg-blue-600 text-white py-5 rounded-3xl font-black uppercase mt-4 disabled:bg-slate-200">
-                {isGeo ? 'Ищем города...' : 'Разместить заказ'}
+                {isGeo ? 'Looking for cities...' : 'Place an order'}
               </button>
             </form>
-            <button onClick={() => setShowForm(false)} className="w-full bg-red-600 text-white py-5 rounded-3xl font-black uppercase mt-4 disabled:bg-slate-200">Отмена</button>
+            <button onClick={() => setShowForm(false)} className="w-full bg-red-600 text-white py-5 rounded-3xl font-black uppercase mt-4 disabled:bg-slate-200">Cancel</button>
           </div>
         </div>
       )}
