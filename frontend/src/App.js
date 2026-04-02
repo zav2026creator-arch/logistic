@@ -63,7 +63,7 @@ export default function App() {
                   На мобилках: h-2/5 (40% экрана), снизу карта.
                   На десктопе: w-80 (фиксированно), h-full. 
               */}
-              <div className="w-full md:w-80 h-[600%] md:h-full border-b md:border-r order-2 md:order-1 bg-white">
+              <div className="w-full md:w-80 h-[60%] md:h-full border-b md:border-r order-2 md:order-1 bg-white">
                 <Sidebar 
                   orders={orders} 
                   selectedId={focusedOrder?.id}
