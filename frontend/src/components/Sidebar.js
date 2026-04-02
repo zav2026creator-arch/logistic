@@ -22,9 +22,9 @@ const Sidebar = ({ orders, onOrderClick, selectedId }) => {
       {/* Шапка и Фильтры */}
       <div className="p-6 border-b bg-slate-50 space-y-4">
         <div>
-          <h2 className="font-black italic uppercase text-xl tracking-tighter">Активные грузы</h2>
+          <h2 className="font-black italic uppercase text-xl tracking-tighter">Active loads</h2>
           <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">
-            Найдено: {filteredOrders.length}
+            Found: {filteredOrders.length}
           </p>
         </div>
 
@@ -33,7 +33,7 @@ const Sidebar = ({ orders, onOrderClick, selectedId }) => {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
           <input 
             type="text"
-            placeholder="Поиск груза..."
+            placeholder="City..."
             className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold outline-none focus:border-blue-500 transition-all"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -49,7 +49,7 @@ const Sidebar = ({ orders, onOrderClick, selectedId }) => {
             onChange={(e) => setStatusFilter(e.target.value)}
           >
             {statuses.map(status => (
-              <option key={status} value={status}>{status === 'All' ? 'Все статусы' : status}</option>
+              <option key={status} value={status}>{status === 'All' ? 'All statuses' : status}</option>
             ))}
           </select>
         </div>
@@ -59,7 +59,7 @@ const Sidebar = ({ orders, onOrderClick, selectedId }) => {
       <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
         {filteredOrders.length === 0 ? (
           <div className="text-center py-10 text-slate-300 font-bold italic">
-            {orders.length === 0 ? "Заказов пока нет" : "Ничего не найдено"}
+            {orders.length === 0 ? "No orders yet" : "Nothing found"}
           </div>
         ) : (
           filteredOrders.map((order) => (
@@ -119,7 +119,7 @@ const Sidebar = ({ orders, onOrderClick, selectedId }) => {
                     }}
                     className="text-[10px] font-black bg-slate-900 text-white px-3 py-1.5 rounded-xl uppercase hover:bg-blue-600 transition-colors"
                     >
-                    Детали
+                    Details
                 </button>
               </div>
             </div>
