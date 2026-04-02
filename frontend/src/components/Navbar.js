@@ -7,11 +7,11 @@ const Navbar = ({ user, onLogout }) => (
     <div className="flex items-center gap-12">
       <h1 className="font-black text-3xl text-blue-600 italic tracking-tighter">ZAV-Logistic</h1>
       <div className="flex gap-8 text-[11px] font-black uppercase tracking-widest text-slate-400">
-        <Link to="/" className="hover:text-blue-600 flex items-center gap-2"><MapIcon size={14}/> Карта</Link>
-        <Link to="/orders" className="hover:text-blue-600 flex items-center gap-2"><Truck size={14}/> Заказы</Link>
+        <Link to="/" className="hover:text-blue-600 flex items-center gap-2"><MapIcon size={14}/> Map</Link>
+        <Link to="/orders" className="hover:text-blue-600 flex items-center gap-2"><Truck size={14}/> Orders</Link>
         {user.role === 'admin' && (
           <Link to="/admin" className="text-slate-900 border-b-2 border-blue-600 flex items-center gap-2">
-            <ShieldCheck size={14}/> Админ
+            <ShieldCheck size={14}/> Admin
           </Link>
         )}
       </div>
