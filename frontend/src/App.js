@@ -57,33 +57,48 @@ export default function App() {
 
         <Routes>
           <Route path="/" element={
-            <div className="flex h-[calc(100vh-96px)] overflow-hidden">
-              {/* Добавляем сайдбар */}
-              <Sidebar 
-                orders={orders} 
-                selectedId={focusedOrder?.id}
-                onOrderClick={(order, showModal) => {
-                  setFocusedOrder(order);
-                  if (showModal) {
-                    setSelectedOrder(order);
-                  }
-                }}
-              />
+            <div className="flex flex-col md:flex-row h-[calc(100vh-112px)] md:h-[calc(100vh-80px)] overflow-hidden">
               
-              {/* Контейнер карты теперь занимает оставшееся место */}
-              <div className="flex-1 relative">
-                <MapContainer center={[44.0, 30.0]} zoom={5} className="h-full w-full">
+              {/* САЙДБАР: 
+                  На мобилках: h-2/5 (40% экрана), снизу карта.
+                  На десктопе: w-80 (фиксированно), h-full. 
+              */}
+              <div className="w-full md:w-80 h-[40%] md:h-full border-b md:border-r order-2 md:order-1 bg-white">
+                <Sidebar 
+                  orders={orders} 
+                  selectedId={focusedOrder?.id}
+                  onOrderClick={(order, showModal) => {
+                    setFocusedOrder(order);
+                    if (showModal) setSelectedOrder(order);
+                  }}
+                />
+              </div>
+              
+              {/* КАРТА: 
+                  На мобилках: h-[60%] (60% экрана).
+                  На десктопе: flex-1 (все остальное место).
+              */}
+              <div className="flex-1 relative h-[60%] md:h-full order-1 md:order-2">
+                <MapContainer center={[44.75, 30.61]} zoom={5} className="h-full w-full">
                   <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                   <MapController selectedOrder={focusedOrder} />
                   <MapResizer /> 
+                  
                   {orders.map(o => (
-                    <Marker key={o.id} position={[o.lat, o.lng]} eventHandlers={{
-        click: () => setSelected(o), // Чтобы при клике на маркер тоже срабатывал фокус
-      }}>
+                    <Marker 
+                      key={o.id} 
+                      position={[o.lat, o.lng]}
+                      eventHandlers={{ click: () => setFocusedOrder(o) }}
+                    >
                       <Popup>
                         <div className="p-2 text-center">
-                          <p className="font-black uppercase italic text-blue-600">{o.cargo}</p>
-                          <button onClick={() => setSelected(o)} className="mt-2 bg-slate-900 text-white px-4 py-1 rounded-lg text-[10px] uppercase font-black">Детали</button>
+                          <p className="font-black uppercase italic text-blue-600 text-[10px]">{o.cargo}</p>
+                          <button 
+                            onClick={() => setSelectedOrder(o)} 
+                            className="mt-2 bg-slate-900 text-white px-3 py-1 rounded-lg text-[9px] uppercase font-black"
+                          >
+                            Details
+                          </button>
                         </div>
                       </Popup>
                     </Marker>
