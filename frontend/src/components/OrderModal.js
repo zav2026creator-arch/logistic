@@ -22,7 +22,7 @@ const OrderModal = ({ selected, user, onClose, onStatusUpdate }) => {
           <div>
             <div className="flex items-center gap-3 mb-2">
               <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
-                Заказ #{selected.id}
+                Order #{selected.id}
               </span>
               <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
                 selected.status === 'Pending' ? 'bg-amber-100 text-amber-600' : 'bg-green-100 text-green-600'
@@ -44,11 +44,11 @@ const OrderModal = ({ selected, user, onClose, onStatusUpdate }) => {
                 </div>
                 <div className="space-y-6">
                   <div>
-                    <p className="text-[10px] uppercase font-black text-slate-300 tracking-widest mb-1">Откуда</p>
+                    <p className="text-[10px] uppercase font-black text-slate-300 tracking-widest mb-1">From</p>
                     <p className="font-bold text-slate-700">{selected.location_from}</p>
                   </div>
                   <div>
-                    <p className="text-[10px] uppercase font-black text-slate-300 tracking-widest mb-1">Куда</p>
+                    <p className="text-[10px] uppercase font-black text-slate-300 tracking-widest mb-1">To</p>
                     <p className="font-bold text-slate-700">{selected.location_to}</p>
                   </div>
                 </div>
@@ -57,13 +57,13 @@ const OrderModal = ({ selected, user, onClose, onStatusUpdate }) => {
               <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-50">
                 <div>
                   <p className="text-[10px] uppercase font-black text-slate-300 mb-1 flex items-center gap-1">
-                    <CreditCard size={12} /> Стоимость
+                    <CreditCard size={12} /> Price
                   </p>
-                  <p className="text-xl font-black text-slate-900">{selected.price || 5000} ₽</p>
+                  <p className="text-xl font-black text-slate-900">{selected.price || 5000} $</p>
                 </div>
                 <div>
                   <p className="text-[10px] uppercase font-black text-slate-300 mb-1 flex items-center gap-1">
-                    <Truck size={12} /> Клиент
+                    <Truck size={12} /> Client
                   </p>
                   <p className="text-sm font-bold text-slate-700">{selected.client_username}</p>
                 </div>
@@ -77,7 +77,7 @@ const OrderModal = ({ selected, user, onClose, onStatusUpdate }) => {
                 onClick={() => onStatusUpdate(selected.id, 'In Transit')} 
                 className="flex-1 bg-blue-600 text-white py-5 rounded-3xl font-black uppercase shadow-xl shadow-blue-200 hover:bg-blue-700 hover:scale-[1.02] transition-all"
               >
-                Принять заказ
+                Accept order
               </button>
             )}
             
@@ -86,7 +86,7 @@ const OrderModal = ({ selected, user, onClose, onStatusUpdate }) => {
                 onClick={() => onStatusUpdate(selected.id, 'Delivered')} 
                 className="flex-1 bg-green-600 text-white py-5 rounded-3xl font-black uppercase shadow-xl shadow-green-200 hover:bg-green-700 transition-all"
               >
-                Доставлено
+                Delivered
               </button>
             )}
 
@@ -94,7 +94,7 @@ const OrderModal = ({ selected, user, onClose, onStatusUpdate }) => {
               onClick={onClose} 
               className="flex-1 bg-slate-100 text-slate-400 py-5 rounded-3xl font-black uppercase hover:bg-slate-200 transition-all"
             >
-              Закрыть
+              Close
             </button>
           </div>
         </div>
