@@ -51,7 +51,23 @@ const OrdersPage = ({ user, orders, onRefresh, setSelected, API_URL }) => {
         )}
       </div>
 
-      <div className="bg-white rounded-[40px] border overflow-hidden shadow-sm">
+      <div className="block md:hidden space-y-4">
+        {orders.map(o => (
+          <div key={o.id} onClick={() => setSelected(o)} className="bg-white p-6 rounded-3xl border shadow-sm">
+            <div className="flex justify-between mb-2">
+              <span className="font-black italic text-blue-600 uppercase">{o.cargo}</span>
+              <span className="text-[10px] font-bold text-slate-300">#{o.id}</span>
+            </div>
+            <p className="text-xs text-slate-500">{o.location_from} → {o.location_to}</p>
+            <div className="mt-4 flex justify-between items-center">
+              <span className="text-[10px] font-black uppercase text-blue-400">{o.status}</span>
+              <button onClick={(e) => handleDelete(e, o.id)} className="text-red-400"><Trash2 size={16}/></button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="hidden md:block bg-white rounded-[40px] border overflow-hidden">
         <table className="w-full text-left">
           <thead className="bg-slate-50 border-b text-[10px] font-black text-slate-400 uppercase">
             <tr>
