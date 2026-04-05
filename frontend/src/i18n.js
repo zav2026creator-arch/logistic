@@ -28,9 +28,9 @@ const resources = {
       
       // Table & Labels
       label_cargo: "Cargo",
-      label_weight: "Weight",
+      label_weight: "Weight (kg)",
       label_weight_short: "kg",
-      label_volume: "Volume",
+      label_volume: "Volume (m³)",
       label_vehicle: "Vehicle Type",
       label_distance: "Distance",
       label_price: "Budget",
@@ -85,9 +85,9 @@ const resources = {
       confirm_delete: "Вы уверены, что хотите удалить этот заказ?",
 
       label_cargo: "Груз",
-      label_weight: "Вес",
+      label_weight: "Вес (кг)",
       label_weight_short: "кг",
-      label_volume: "Объем",
+      label_volume: "Объем (m³)",
       label_vehicle: "Тип ТС",
       label_distance: "Дистанция",
       label_price: "Бюджет",
@@ -139,9 +139,9 @@ const resources = {
       confirm_delete: "Ви впевнені, що хочете видалити це замовлення?",
 
       label_cargo: "Вантаж",
-      label_weight: "Вага",
+      label_weight: "Вага (кг)",
       label_weight_short: "кг",
-      label_volume: "Об'єм",
+      label_volume: "Об'єм (m³)",
       label_vehicle: "Тип ТЗ",
       label_distance: "Відстань",
       label_price: "Бюджет",
@@ -193,9 +193,9 @@ const resources = {
       confirm_delete: "Sei sicuro di voler eliminare questo ordine?",
 
       label_cargo: "Merce",
-      label_weight: "Peso",
+      label_weight: "Peso (kg)",
       label_weight_short: "kg",
-      label_volume: "Volume",
+      label_volume: "Volume (m³)",
       label_vehicle: "Tipo Veicolo",
       label_distance: "Distanza",
       label_price: "Budget",
