@@ -1,11 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { Package, MapPin, Navigation, Search, Filter, Weight} from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Sidebar = ({ orders, onOrderClick, selectedId }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
+  const { t } = useTranslation();
 
-  // Логика фильтрации (useMemo для оптимизации)
   const filteredOrders = useMemo(() => {
     return orders.filter(order => {
       const matchesSearch = order.location_from.toLowerCase().includes(searchTerm.toLowerCase());
@@ -14,33 +15,29 @@ const Sidebar = ({ orders, onOrderClick, selectedId }) => {
     });
   }, [orders, searchTerm, statusFilter]);
 
-  // Список уникальных статусов для выпадающего списка
   const statuses = ['All', ...new Set(orders.map(o => o.status))];
 
   return (
     <div className="w-80 h-full bg-white border-r shadow-xl z-[1000] flex flex-col overflow-hidden">
-      {/* Шапка и Фильтры */}
       <div className="p-6 border-b bg-slate-50 space-y-4">
         <div>
-          <h2 className="font-black italic uppercase text-xl tracking-tighter">Active loads</h2>
+          <h2 className="font-black italic uppercase text-xl tracking-tighter">{t('orders')}</h2>
           <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">
-            Found: {filteredOrders.length}
+            {t('found')}: {filteredOrders.length}
           </p>
         </div>
 
-        {/* Поле поиска */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
           <input 
             type="text"
-            placeholder="City..."
+            placeholder={t('search_city')}
             className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold outline-none focus:border-blue-500 transition-all"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
 
-        {/* Фильтр по статусу */}
         <div className="flex items-center gap-2">
           <Filter size={12} className="text-slate-400" />
           <select 
@@ -49,17 +46,18 @@ const Sidebar = ({ orders, onOrderClick, selectedId }) => {
             onChange={(e) => setStatusFilter(e.target.value)}
           >
             {statuses.map(status => (
-              <option key={status} value={status}>{status === 'All' ? 'All statuses' : status}</option>
+              <option key={status} value={status}>
+                {status === 'All' ? t('all_statuses') : t(`status_${status.toLowerCase()}`)}
+              </option>
             ))}
           </select>
         </div>
       </div>
 
-      {/* Список заказов */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
         {filteredOrders.length === 0 ? (
           <div className="text-center py-10 text-slate-300 font-bold italic">
-            {orders.length === 0 ? "No orders yet" : "Nothing found"}
+            {orders.length === 0 ? t('no_orders') : t('nothing_found')}
           </div>
         ) : (
           filteredOrders.map((order) => (
@@ -97,7 +95,7 @@ const Sidebar = ({ orders, onOrderClick, selectedId }) => {
                 <div className="flex items-start gap-2">
                   <Weight size={12} className="text-blue-400 mt-1 shrink-0" />
                   <p className="text-[10px] font-bold text-slate-800 leading-tight">
-                    {order.weight} KG
+                    {order.weight} {t('label_weight_short', 'KG')}
                   </p>
                 </div>
               </div>
@@ -110,16 +108,16 @@ const Sidebar = ({ orders, onOrderClick, selectedId }) => {
                   order.status === 'Pending' ? 'text-amber-500' : 
                   order.status === 'In Transit' ? 'text-blue-500' : 'text-green-500'
                 }`}>
-                  {order.status}
+                  {t(`status_${order.status.toLowerCase()}`)}
                 </span>
                 <button 
                     onClick={(e) => {
-                        e.stopPropagation(); // Чтобы не сработал клик по карточке (flyTo)
-                        onOrderClick(order, true); // true означает "открыть модалку"
+                        e.stopPropagation();
+                        onOrderClick(order, true);
                     }}
                     className="text-[10px] font-black bg-slate-900 text-white px-3 py-1.5 rounded-xl uppercase hover:bg-blue-600 transition-colors"
                     >
-                    Details
+                    {t('details')}
                 </button>
               </div>
             </div>
