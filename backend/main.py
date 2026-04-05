@@ -1,21 +1,15 @@
+import sqlite3
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from datetime import datetime
 from typing import List, Optional
-import sqlite3
 import bcrypt
-
-def hash_password(password: str) -> bytes:
-    password_bytes = password.encode('utf-8')
-    salt = bcrypt.gensalt()
-    hashed = bcrypt.hashpw(password_bytes, salt)
-    return hashed
-
-def check_password(password: str, hashed: bytes) -> bool:
-    return bcrypt.checkpw(password.encode('utf-8'), hashed)
+import os
 
 app = FastAPI()
 
+# --- МИДЛВЕР (CORS) ---
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -23,12 +17,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# --- ХЕШИРОВАНИЕ ---
+def hash_password(password: str) -> bytes:
+    password_bytes = password.encode('utf-8')
+    salt = bcrypt.gensalt()
+    return bcrypt.hashpw(password_bytes, salt)
+
+def check_password(password: str, hashed: bytes) -> bool:
+    return bcrypt.checkpw(password.encode('utf-8'), hashed)
+
 # --- ИНИЦИАЛИЗАЦИЯ БАЗЫ ДАННЫХ ---
 def init_db():
     conn = sqlite3.connect('logistics.db')
     cursor = conn.cursor()
     
-    # Таблица пользователей (с расширенными полями)
+    # Таблица пользователей
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -43,19 +46,25 @@ def init_db():
         )
     ''')
     
-    # Таблица заказов (с двумя точками координат и привязкой к юзеру)
+    # Таблица заказов (ОБНОВЛЕННАЯ: добавил created_at, vehicle_type)
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS orders (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             cargo TEXT,
+            weight REAL,
+            volume REAL,
+            distance REAL,
             location_from TEXT,
             location_to TEXT,
             lat REAL, lng REAL,
             lat2 REAL, lng2 REAL,
+            description TEXT,
+            vehicle_type TEXT,
             status TEXT,
             client_username TEXT,
             carrier_username TEXT,
-            price INTEGER DEFAULT 5000
+            price INTEGER DEFAULT 5000,
+            created_at TEXT
         )
     ''')
     conn.commit()
@@ -66,7 +75,6 @@ init_db()
 # --- ЭНДПОИНТЫ АВТОРИЗАЦИИ ---
 @app.post("/api/register")
 async def register(data: dict):
-    print(data)
     conn = sqlite3.connect('logistics.db')
     cursor = conn.cursor()
     try:
@@ -87,12 +95,15 @@ async def login(data: dict):
     conn = sqlite3.connect('logistics.db')
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
-    name = data['username']
-    cursor.execute("SELECT * FROM users WHERE username = ?", (name,))
+    cursor.execute("SELECT * FROM users WHERE username = ?", (data['username'],))
     user = cursor.fetchone()
     conn.close()
-    if user:
-        return dict(user)
+    
+    if user and check_password(data['password'], user['password']):
+        user_dict = dict(user)
+        del user_dict['password'] # Удаляем хеш пароля из ответа для безопасности
+        return user_dict
+    
     raise HTTPException(status_code=401, detail="Неверные данные")
 
 # --- ЭНДПОИНТЫ ЗАКАЗОВ ---
@@ -112,25 +123,42 @@ async def get_orders(username: str, role: str):
     conn.close()
     return [dict(r) for r in rows]
 
-@app.post("/api/orders")
+@app.post("/api/orders") 
 async def create_order(order: dict):
     conn = sqlite3.connect('logistics.db')
     cursor = conn.cursor()
+    now = datetime.now().strftime("%Y-%m-%d %H:%M")
+    
+    # Обрати внимание: во фронтенде поля называются 'location_from', а не 'from'
     cursor.execute('''
-        INSERT INTO orders (cargo, location_from, location_to, lat, lng, lat2, lng2, status, client_username)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ''', (order['cargo'], order['from'], order['to'], order['lat'], order['lng'], 
-          order['lat2'], order['lng2'], 'Pending', order['username']))
+        INSERT INTO orders (
+            cargo, weight, volume, distance, location_from, location_to, 
+            lat, lng, lat2, lng2, description, vehicle_type, price, 
+            status, client_username, created_at
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (
+        order['cargo'], order.get('weight', 0), order.get('volume', 0), 
+        order.get('distance', 0), order['location_from'], order['location_to'], 
+        order['lat'], order['lng'], order['lat2'], order['lng2'], 
+        order.get('description', ''), order.get('vehicle_type', ''), 
+        order.get('price', 5000), 'Pending', order['username'], now
+    ))
     conn.commit()
     conn.close()
-    return {"status": "ok"}
+    return {"status": "ok", "created_at": now}
 
 @app.patch("/api/orders/{order_id}/status")
 async def update_status(order_id: int, data: dict):
     conn = sqlite3.connect('logistics.db')
     cursor = conn.cursor()
-    cursor.execute("UPDATE orders SET status = ?, carrier_username = ? WHERE id = ?", 
-                   (data['status'], data.get('carrier_username'), order_id))
+    # Если передаем carrier_username, обновляем и его (при принятии заказа)
+    if 'carrier_username' in data:
+        cursor.execute("UPDATE orders SET status = ?, carrier_username = ? WHERE id = ?", 
+                       (data['status'], data['carrier_username'], order_id))
+    else:
+        cursor.execute("UPDATE orders SET status = ? WHERE id = ?", 
+                       (data['status'], order_id))
     conn.commit()
     conn.close()
     return {"status": "updated"}
@@ -150,27 +178,12 @@ async def get_users():
     conn = sqlite3.connect('logistics.db')
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM users")
+    cursor.execute("SELECT id, username, role, email, phone, org_name FROM users")
     rows = cursor.fetchall()
-    res = [dict(r) for r in rows]
     conn.close()
-    return res
-
-@app.get("/api/admin/stats")
-async def get_stats():
-    conn = sqlite3.connect('logistics.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT COUNT(*) FROM orders")
-    total = cursor.fetchone()[0]
-    cursor.execute("SELECT SUM(price) FROM orders WHERE status = 'Delivered'")
-    rev = cursor.fetchone()[0] or 0
-    cursor.execute("SELECT COUNT(*) FROM users")
-    usrs = cursor.fetchone()[0]
-    conn.close()
-    return {"total_orders": total, "revenue": rev, "total_users": usrs}
+    return [dict(r) for r in rows]
 
 if __name__ == "__main__":
     import uvicorn
-    import os
     port = int(os.environ.get("PORT", 5000))
     uvicorn.run(app, host="0.0.0.0", port=port)
