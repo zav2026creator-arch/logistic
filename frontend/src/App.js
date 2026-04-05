@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useMap } from 'react-leaflet';
+import { useTranslation } from 'react-i18next';
 
 // Импортируем наши новые компоненты
 import Navbar from './components/Navbar';
@@ -12,7 +13,7 @@ import OrderModal from './components/OrderModal';
 import Sidebar from './components/Sidebar';
 import MapController from './components/MapController';
 
-const API_URL = 'https://logistic-f86s.onrender.com/api';
+const API_URL = 'http://localhost:5000/api';
 
 function MapResizer() {
   const map = useMap();
@@ -28,6 +29,7 @@ export default function App() {
   const [selected, setSelected] = useState(null);
   const [focusedOrder, setFocusedOrder] = useState(null); // Для MapController
   const [selectedOrder, setSelectedOrder] = useState(null); // Для модального окна
+  const { t } = useTranslation();
 
   const fetchOrders = async () => {
     if (!user) return;
@@ -50,6 +52,8 @@ export default function App() {
 
   if (!user) return <AuthPage onLogin={setUser} API_URL={API_URL} />;
 
+
+
   return (
     <Router>
       <div className="min-h-screen bg-slate-50">
@@ -63,7 +67,7 @@ export default function App() {
                   На мобилках: h-2/5 (40% экрана), снизу карта.
                   На десктопе: w-80 (фиксированно), h-full. 
               */}
-              <div className="w-full md:w-80 h-[60%] md:h-full border-b md:border-r order-2 md:order-1 bg-white">
+              <div className="w-full md:w-80 h-[40%] md:h-full border-b md:border-r order-2 md:order-1 bg-white">
                 <Sidebar 
                   orders={orders} 
                   selectedId={focusedOrder?.id}
@@ -78,8 +82,8 @@ export default function App() {
                   На мобилках: h-[60%] (60% экрана).
                   На десктопе: flex-1 (все остальное место).
               */}
-              <div className="flex-1 relative h-[40%] md:h-full order-1 md:order-2">
-                <MapContainer center={[44.75, 30.61]} zoom={5} className="h-full w-full">
+              <div className="flex-1 relative h-[60%] md:h-full order-1 md:order-2">
+                <MapContainer center={[40.75, 40.61]} zoom={5} className="h-full w-full">
                   <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                   <MapController selectedOrder={focusedOrder} />
                   <MapResizer /> 
@@ -97,7 +101,7 @@ export default function App() {
                             onClick={() => setSelectedOrder(o)} 
                             className="mt-2 bg-slate-900 text-white px-3 py-1 rounded-lg text-[9px] uppercase font-black"
                           >
-                            Details
+                            {t('details')}
                           </button>
                         </div>
                       </Popup>
