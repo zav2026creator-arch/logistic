@@ -1,9 +1,21 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Map as MapIcon, Truck, ShieldCheck, LogOut, User } from 'lucide-react';
+import { Map as MapIcon, Truck, ShieldCheck, LogOut, User, Globe, ChevronDown } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Navbar = ({ user, onLogout }) => {
   const location = useLocation();
+  const { t, i18n } = useTranslation();
+
+  // Словарь флагов и названий
+  const languages = [
+    { code: 'en', label: 'English', flag: '🇺🇸' },
+   // { code: 'ru', label: 'Русский', flag: '🇷🇺' },
+    { code: 'ukr', label: 'Українська', flag: '🇺🇦' },
+    { code: 'it', label: 'Italiano', flag: '🇮🇹' }
+  ];
+
+  const currentLanguage = languages.find(l => l.code === i18n.language) || languages[0];
 
   // Функция для проверки активной ссылки (подсвечивает синим)
   const isActive = (path) => location.pathname === path;
@@ -26,8 +38,9 @@ const Navbar = ({ user, onLogout }) => {
 
             {/* НАВИГАЦИЯ (Десктоп) */}
             <nav className="hidden md:flex items-center gap-1 ml-4">
-              <NavLink to="/" icon={<MapIcon size={16}/>} label="Map" active={isActive('/')} />
-              <NavLink to="/orders" icon={<Truck size={16}/>} label="Orders" active={isActive('/orders')} />
+              <NavLink to="/" icon={<MapIcon size={16}/>} label={t('map')} active={isActive('/')} />
+              <NavLink to="/orders" icon={<Truck size={16}/>} label={t('orders')} active={isActive('/orders')} />
+              
               {user.role === 'admin' && (
                 <NavLink to="/admin" icon={<ShieldCheck size={16}/>} label="Админ" active={isActive('/admin')} />
               )}
@@ -45,6 +58,35 @@ const Navbar = ({ user, onLogout }) => {
                 {user.username}
               </span>
             </div>
+
+            {/* Компактный выбор языка */}
+              <div className="flex items-center gap-4">
+                <div className="relative group">
+                  <div className="flex items-center gap-2 bg-slate-50 px-3 py-2 rounded-xl border border-slate-100 hover:border-blue-200 transition-all cursor-pointer">
+                    <span className="text-lg">{currentLanguage.flag}</span>
+                    <span className="text-xs font-black uppercase tracking-wider text-slate-700 hidden sm:block">
+                      {currentLanguage.code}
+                    </span>
+                    <ChevronDown size={14} className="text-slate-400 group-hover:rotate-180 transition-transform" />
+                  </div>
+
+                  {/* Выпадающий список при наведении (или клике) */}
+                  <div className="absolute right-0 mt-2 w-40 bg-white rounded-2xl shadow-xl border border-slate-50 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-[6000]">
+                    {languages.map((lng) => (
+                      <button
+                        key={lng.code}
+                        onClick={() => i18n.changeLanguage(lng.code)}
+                        className={`w-full flex items-center gap-3 px-4 py-2 text-sm font-bold transition-colors ${
+                          i18n.language === lng.code ? 'text-blue-600 bg-blue-50' : 'text-slate-600 hover:bg-slate-50'
+                        }`}
+                      >
+                        <span>{lng.flag}</span>
+                        <span>{lng.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
 
             {/* Кнопка Профиля / Юзера */}
             <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 border border-slate-200 sm:hidden">
