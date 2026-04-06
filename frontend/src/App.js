@@ -13,7 +13,7 @@ import OrderModal from './components/OrderModal';
 import Sidebar from './components/Sidebar';
 import MapController from './components/MapController';
 
-const API_URL = 'https://logistic-f86s.onrender.com/api';
+const API_URL = 'http://localhost:5000/api';
 
 function MapResizer() {
   const map = useMap();
