@@ -106,6 +106,46 @@ async def login(data: dict):
     
     raise HTTPException(status_code=401, detail="Неверные данные")
 
+@app.put("/api/users/update")
+async def update_user(updated_user: dict):
+    conn = sqlite3.connect('logistics.db')
+    cursor = conn.cursor()
+    
+    try:
+        cursor.execute('''
+            UPDATE users SET 
+                email = ?, 
+                phone = ?, 
+                org_name = ?, 
+                reg_address = ?
+            WHERE username = ?
+        ''', (
+            updated_user.get('email'),
+            updated_user.get('phone'),
+            updated_user.get('org_name'),
+            updated_user.get('reg_address'),
+            updated_user.get('username')
+        ))
+        conn.commit()
+        
+        # Получаем обновленные данные, чтобы вернуть их на фронт
+        cursor.execute("SELECT * FROM users WHERE username = ?", (updated_user['username'],))
+        row = cursor.fetchone()
+        # Превращаем в словарь (с учетом вашей структуры)
+        user_data = {
+            "username": row[1],
+            "role": row[3],
+            "email": row[4],
+            "phone": row[5],
+            "org_name": row[6],
+            "reg_address": row[7]
+        }
+        return user_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        conn.close()
+
 # --- ЭНДПОИНТЫ ЗАКАЗОВ ---
 @app.get("/api/orders")
 async def get_orders(username: str, role: str):
@@ -117,7 +157,7 @@ async def get_orders(username: str, role: str):
     elif role == 'client':
         cursor.execute("SELECT * FROM orders WHERE client_username = ? ORDER BY id DESC", (username,))
     else: # carrier
-        cursor.execute("SELECT orders.*, users.phone FROM orders LEFT JOIN users ON orders.client_username = users.username WHERE carrier_username = ? OR status = 'Pending' ORDER BY id DESC", (username,))
+        cursor.execute("SELECT orders.*, users.phone, users.email FROM orders LEFT JOIN users ON orders.client_username = users.username WHERE carrier_username = ? OR status = 'Pending' ORDER BY id DESC", (username,))
     
     rows = cursor.fetchall()
     conn.close()
