@@ -12,8 +12,9 @@ import OrdersPage from './components/OrdersPage';
 import OrderModal from './components/OrderModal';
 import Sidebar from './components/Sidebar';
 import MapController from './components/MapController';
+import ProfilePage from './components/ProfilePage';
 
-const API_URL = 'https://logistic-f86s.onrender.com/api';
+const API_URL = 'http://localhost:5000/api';
 
 function MapResizer() {
   const map = useMap();
@@ -113,6 +114,17 @@ export default function App() {
           } />
           <Route path="/orders" element={<OrdersPage user={user} orders={orders} onRefresh={fetchOrders} setSelected={setSelectedOrder} API_URL={API_URL} />} />
           <Route path="/admin" element={user.role === 'admin' ? <AdminPage API_URL={API_URL} /> : <Navigate to="/" />} />
+          <Route 
+            path="/profile" 
+            element={user ? (
+              <ProfilePage 
+                user={user} 
+                API_URL={API_URL} 
+                onUpdate={(updatedData) => setUser(updatedData)} 
+                onLogout={() => setUser(null)}
+              />
+            ) : <Navigate to="/" />} 
+          />
         </Routes>
 
         {selectedOrder && (
