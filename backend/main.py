@@ -117,7 +117,7 @@ async def get_orders(username: str, role: str):
     elif role == 'client':
         cursor.execute("SELECT * FROM orders WHERE client_username = ? ORDER BY id DESC", (username,))
     else: # carrier
-        cursor.execute("SELECT * FROM orders WHERE carrier_username = ? OR status = 'Pending' ORDER BY id DESC", (username,))
+        cursor.execute("SELECT orders.*, users.phone FROM orders LEFT JOIN users ON orders.client_username = users.username WHERE carrier_username = ? OR status = 'Pending' ORDER BY id DESC", (username,))
     
     rows = cursor.fetchall()
     conn.close()
