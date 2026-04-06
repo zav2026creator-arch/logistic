@@ -216,7 +216,9 @@ const OrdersPage = ({ user, orders, onRefresh, setSelected, API_URL }) => {
           <div key={o.id} onClick={() => setSelected(o)} className="bg-white p-6 rounded-[30px] border border-slate-100 shadow-sm">
             <div className="flex justify-between items-start mb-4">
               <span className="font-black italic text-slate-800 uppercase">{o.cargo}</span>
-              <button onClick={(e) => handleDelete(e, o.id)} className="text-slate-200"><Trash2 size={18}/></button>
+              {(user.role === 'client') && (
+                <button onClick={(e) => handleDelete(e, o.id)} className="text-slate-200"><Trash2 size={18}/></button>
+              )}
             </div>
             <div className="flex items-center gap-2 text-xs font-bold text-slate-500 mb-4">
               <MapPin size={14} className="text-blue-500" /> {o.location_from} → {o.location_to}
