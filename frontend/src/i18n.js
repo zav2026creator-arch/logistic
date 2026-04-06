@@ -60,7 +60,11 @@ const resources = {
 
       // Actions
       btn_accept: "Accept This Load",
-      btn_close: "Close"
+      btn_close: "Close",
+      order_accepted_title: "Order Accepted!",
+      order_accepted_desc: "Contact the customer to clarify details",
+      label_client_phone: "Customer Phone",
+      call: "Call Now"
     }
   },
   ru: {
@@ -114,7 +118,11 @@ const resources = {
       status_delivered: "Доставлено",
 
       btn_accept: "Взять этот рейс",
-      btn_close: "Закрыть"
+      btn_close: "Закрыть",
+      order_accepted_title: "Заказ принят!",
+      order_accepted_desc: "Свяжитесь с заказчиком для уточнения деталей",
+      label_client_phone: "Телефон заказчика",
+      call: "Позвонить"
     }
   },
   ukr: {
@@ -168,7 +176,11 @@ const resources = {
       status_delivered: "Доставлено",
 
       btn_accept: "Взяти цей рейс",
-      btn_close: "Закрити"
+      btn_close: "Закрити",
+      order_accepted_title: "Замовлення прийнято!",
+      order_accepted_desc: "Звяжіться з замовником для уточнення деталей",
+      label_client_phone: "Телефон замовника",
+      call: "Подзвонити"
     }
   },
   it: {
@@ -222,7 +234,11 @@ const resources = {
       status_delivered: "Consegnato",
 
       btn_accept: "Accetta carico",
-      btn_close: "Chiudi"
+      btn_close: "Chiudi",
+      order_accepted_title: "Ordine aprovato!",
+      order_accepted_desc: "Chiama il cliente per chiarire detagli",
+      label_client_phone: "Numero cliente",
+      call: "Chiama"
     }
   }
 };
