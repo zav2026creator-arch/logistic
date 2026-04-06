@@ -199,9 +199,11 @@ const OrdersPage = ({ user, orders, onRefresh, setSelected, API_URL }) => {
                     {t(`status_${o.status.toLowerCase().replace(/\s/g, '_')}`)}
                    </span>
                 </td>
-                <td className="p-6 text-right">
-                  <button onClick={(e) => handleDelete(e, o.id)} className="p-2 text-slate-200 hover:text-red-500 transition-colors"><Trash2 size={18}/></button>
-                </td>
+                {(user.role === 'client') && (
+                  <td className="p-6 text-right">
+                    <button onClick={(e) => handleDelete(e, o.id)} className="p-2 text-slate-200 hover:text-red-500 transition-colors"><Trash2 size={18}/></button>
+                  </td>                
+                )}
               </tr>
             ))}
           </tbody>
