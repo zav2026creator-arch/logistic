@@ -14,7 +14,7 @@ import Sidebar from './components/Sidebar';
 import MapController from './components/MapController';
 import ProfilePage from './components/ProfilePage';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://logistic-f86s.onrender.com/api';
 
 function MapResizer() {
   const map = useMap();
