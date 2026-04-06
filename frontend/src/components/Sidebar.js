@@ -18,7 +18,7 @@ const Sidebar = ({ orders, onOrderClick, selectedId }) => {
   const statuses = ['All', ...new Set(orders.map(o => o.status))];
 
   return (
-    <div className="w-80 h-full bg-white border-r shadow-xl z-[1000] flex flex-col overflow-hidden">
+    <div className="w-full h-full bg-white border-r shadow-xl z-[1000] flex flex-col overflow-hidden">
       <div className="p-6 border-b bg-slate-50 space-y-4">
         <div>
           <h2 className="font-black italic uppercase text-xl tracking-tighter">{t('orders')}</h2>
