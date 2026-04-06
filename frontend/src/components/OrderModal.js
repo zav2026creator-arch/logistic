@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react'; // Добавили useState и useEffect
 import { MapContainer, TileLayer, Marker, Polyline } from 'react-leaflet';
-import { X, Scale, Box, Info, Car, Gauge, Banknote, Phone, CheckCircle } from 'lucide-react'; // Добавили Phone и CheckCircle
+import { X, Scale, Box, Info, Car, Gauge, Banknote, Phone, CheckCircle, Mail } from 'lucide-react'; // Добавили Phone и CheckCircle
 import { useTranslation } from 'react-i18next';
 
 const OrderModal = ({ selected, user, onClose, onStatusUpdate }) => {
@@ -187,6 +187,11 @@ const OrderModal = ({ selected, user, onClose, onStatusUpdate }) => {
                 <p className="text-2xl font-black text-blue-900 mb-6 tracking-tighter">
                   {selected.phone || '+39 345 888 22 11'}
                 </p>
+                <div className="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center text-white mb-2 shadow-md">
+                  <Mail size={20} /> {/* Или импортируйте иконку Mail из lucide-react */}
+                </div>
+                <p className="text-[9px] font-black uppercase text-slate-400 mb-1">{t('label_client_email', 'Email заказчика')}</p>
+                <p className="text-xl font-black text-emerald-900 mb-6">{selected.email}</p>
                 
                 <div className="grid grid-cols-1 gap-3 w-full">
                    <a 
@@ -195,6 +200,12 @@ const OrderModal = ({ selected, user, onClose, onStatusUpdate }) => {
                    >
                      <Phone size={16} /> {t('call', 'Позвонить')}
                    </a>
+                   <a 
+                    href={`mailto:${selected.email}`} 
+                    className="flex items-center justify-center gap-2 bg-emerald-500 text-white py-3 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-emerald-600 transition-all"
+                  >
+                    {t('send_email', 'Написать Email')}
+                  </a>
                    <button 
                     onClick={onClose}
                     className="bg-slate-900 text-white py-4 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-slate-800 transition-colors"
