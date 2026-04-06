@@ -64,7 +64,22 @@ const resources = {
       order_accepted_title: "Order Accepted!",
       order_accepted_desc: "Contact the customer to clarify details",
       label_client_phone: "Customer Phone",
-      call: "Call Now"
+      call: "Call Now",
+      label_client_email: "Customer Email",
+      send_email: "Send Email",
+
+      // Profile Page
+      username: "Username",
+      role: "User Role",
+      email: "Email Address",
+      phone: "Phone Number",
+      org_name: "Organization Name",
+      address: "Registration Address",
+      save_changes: "Save Changes",
+      profile_updated: "Profile updated successfully!",
+
+      // Profile
+      profile: "Profile"
     }
   },
   ru: {
@@ -122,7 +137,22 @@ const resources = {
       order_accepted_title: "Заказ принят!",
       order_accepted_desc: "Свяжитесь с заказчиком для уточнения деталей",
       label_client_phone: "Телефон заказчика",
-      call: "Позвонить"
+      call: "Позвонить",
+      label_client_email: "Email заказчика",
+      send_email: "Написать письмо",
+
+      // Страница профиля
+      username: "Логин",
+      role: "Роль пользователя",
+      email: "Электронная почта",
+      phone: "Номер телефона",
+      org_name: "Название организации",
+      address: "Юридический адрес",
+      save_changes: "Сохранить изменения",
+      profile_updated: "Профиль успешно обновлен!",
+
+      // Profile
+      profile: "Профиль"
     }
   },
   ukr: {
@@ -180,7 +210,23 @@ const resources = {
       order_accepted_title: "Замовлення прийнято!",
       order_accepted_desc: "Звяжіться з замовником для уточнення деталей",
       label_client_phone: "Телефон замовника",
-      call: "Подзвонити"
+      call: "Подзвонити",
+      label_client_email: "Email замовника",
+      send_email: "Написати листа",
+
+      // Страница профиля
+      username: "Логін",
+      role: "Роль користувача",
+      email: "Электронна адреса",
+      phone: "Номер телефону",
+      org_name: "Найменування організації",
+      address: "Юридична адреса",
+      save_changes: "Зберегти зміни",
+      profile_updated: "Профіль успішно обновлено!",
+
+
+      // Profile
+      profile: "Профіль"
     }
   },
   it: {
@@ -238,7 +284,21 @@ const resources = {
       order_accepted_title: "Ordine aprovato!",
       order_accepted_desc: "Chiama il cliente per chiarire detagli",
       label_client_phone: "Numero cliente",
-      call: "Chiama"
+      call: "Chiama",
+      label_client_email: "Email del cliente",
+      send_email: "Invia Email",
+
+      username: "Nome utente",
+      role: "User role",
+      email: "Indirizzo e-mail",
+      phone: "Numero di telefono",
+      org_name: "Nome del azienda",
+      address: "Indirizzo",
+      save_changes: "Salva modifiche",
+      profile_updated: "Profilo aggiornato con successo!",
+
+      // Profile
+      profile: "Profile"
     }
   }
 };
